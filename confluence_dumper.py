@@ -118,7 +118,10 @@ def handle_html_references(html_content, page_duplicate_file_names, page_file_ma
     :returns: Fixed HTML content.
     """
     try:
-        html_tree = html.fromstring(html_content)
+        if len(html_content) > 10:
+            html_tree = html.fromstring(html_content)
+        else:
+            return "<!doctype html><title>.</title>"
     except XMLSyntaxError:
         print('%sWARNING: Could not parse HTML content of last page. Original content will be downloaded as it is.'
               % ('\t'*(depth+1)))
