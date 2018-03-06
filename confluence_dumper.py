@@ -134,12 +134,14 @@ def handle_html_references(html_content, page_duplicate_file_names, page_file_ma
     xpath_expr = '//a[contains(@href, "/display/")]'
     for link_element in html_tree.xpath(xpath_expr):
         if not link_element.get('class'):
-            page_title = link_element.attrib['href'].split('/')[3]
-            page_title = page_title.replace('+', ' ')
-            decoded_page_title = utils.decode_url(page_title)
-            offline_link = provide_unique_file_name(page_duplicate_file_names, page_file_matching, decoded_page_title,
-                                                    explicit_file_extension='html')
-            link_element.attrib['href'] = utils.encode_url(offline_link)
+            # example: /display/~name links to a different space out of scope
+            if len(link_element.attrib['href'].split('/')) > 3:
+                page_title = link_element.attrib['href'].split('/')[3]
+                page_title = page_title.replace('+', ' ')
+                decoded_page_title = utils.decode_url(page_title)
+                offline_link = provide_unique_file_name(page_duplicate_file_names, page_file_matching, decoded_page_title,
+                                                        explicit_file_extension='html')
+                link_element.attrib['href'] = utils.encode_url(offline_link)
 
     # Fix links to other Confluence pages when page ids are used
     xpath_expr = '//a[contains(@href, "/pages/viewpage.action?pageId=")]'
