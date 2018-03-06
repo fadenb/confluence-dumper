@@ -36,6 +36,11 @@ Copy confluence settings::
 
 Please personalize the ``settings.py`` on your own according to your confluence instance.
 
+**********************
+Hackety hack hack hack
+**********************
+Provide a valid session id by modifying util.py line 61
+
 ==========
 How to use
 ==========
