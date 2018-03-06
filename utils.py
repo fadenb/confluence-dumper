@@ -53,7 +53,13 @@ def http_download_binary_file(request_url, file_path, auth=None, headers=None, v
     :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
     :raises: ConfluenceException in the case of the server does not answer with HTTP code 200.
     """
-    response = requests.get(request_url, stream=True, auth=auth, headers=headers, verify=verify_peer_certificate,
+
+    # TODO: Provide sessionid via config file
+    # A Confluence integrated with Okta did not provide access to files using only username and password
+    # Provide a valid JSESSIONID to download those
+    # Warning: Session might become invalid while dumping large Confluence spaces!
+    monster = dict(JSESSIONID='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+    response = requests.get(request_url, stream=True, auth=None, headers=None, verify=verify_peer_certificate, cookies=monster,
                             proxies=proxies)
     if 200 == response.status_code:
         with open(file_path, 'wb') as downloaded_file:
